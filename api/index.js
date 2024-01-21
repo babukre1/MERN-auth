@@ -19,6 +19,17 @@ app.use(express.json());
 app.use("/api/user", userRoutes);
 app.use("/signup", authRoutes);
 
+app.use((err, req, res, next) => {
+  const statusCode = res.statusCode || 500;
+  const message = err.message || "Internal Error Message";
+  return res.status(statusCode).json({
+    success: false,
+    message,
+    statusCode,
+  });
+});
+
 app.listen(3004, () => {
   console.log("server listening in port 3000");
 });
+
