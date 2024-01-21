@@ -1,21 +1,23 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-dotenv.config()
+import userRoutes from "./routes/user.route.js";
+import authRoutes from "./routes/auth.route.js";
+
 const app = express();
+
 dotenv.config();
-console.log(process.env.MONGO);
-mongoose.connect(process.env.MONGO)
-.then((res) => {
+
+mongoose
+  .connect(process.env.MONGO)
+  .then((res) => {
     console.log("connected to mongoDB");
-}).catch((err) => console.log("didnt connected: ", err))
+  })
+  .catch((err) => console.log("didnt connected: ", err));
+app.use(express.json());
 
-
-app.get("/hello", (req, res) => {
-    console.log("hello, world");
-    res.send("this is hi");
-
-})
+app.use("/api/user", userRoutes);
+app.use("/signup", authRoutes);
 
 app.listen(3004, () => {
   console.log("server listening in port 3000");
