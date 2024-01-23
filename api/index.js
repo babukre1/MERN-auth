@@ -17,7 +17,7 @@ mongoose
 app.use(express.json());
 
 app.use("/api/user", userRoutes);
-app.use("/signup", authRoutes);
+app.use("/api/auth", authRoutes);
 
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode || 500;
