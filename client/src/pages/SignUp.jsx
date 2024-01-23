@@ -1,12 +1,13 @@
 import React from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({});
   const [loading, setLoading] = useState(null);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     console.log("submitted");
@@ -27,6 +28,8 @@ export default function SignUp() {
       if (data.success == false) {
         setError(true);
       }
+      navigate('/sign-in')
+
     } catch (error) {
       setError(true);
       setLoading(false);
@@ -71,7 +74,9 @@ export default function SignUp() {
           <span className="text-blue-500 font-semibold">Sign In</span>
         </Link>
       </div>
-      <div>{error && "something went wrong"}</div>
+      <div className="text-red-500 font-semibold">
+        {error && "something went wrong!"}
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { errorHandler } from "../utiles/error.js";
 export const test = (req, res) => {
   res.json({
     messsage: "API Working!",
@@ -29,15 +30,20 @@ export const signin = async (req, res, next) => {
     if (!validUser) {
       return next(errorHandler(401, "user not found"));
     }
-    const validPassword = bcryptjs.hashSync(password, validUser.password);
+    const validPassword = bcryptjs.compareSync(password, validUser.password);
+    console.log(validPassword);
     if (!validPassword) {
       return next(errorHandler(401, "wrong email or password"));
     }
     const token = jwt.sign({ id: validUser._id }, process.env.SECRET);
     const { password: hashedPassword, ...rest } = validUser._doc;
-    const expiryDate = new Date(Date.now + 3600000);
+    const expiryDate = new Date(); // Create a new date object
+    expiryDate.setHours(expiryDate.getHours() + 1); // Set expiration to 1 hour from now
     res
-      .cookie("access_token", token, { httpOnly: true, expiresIn: expiryDate })
+      .cookie("access_token", token, {
+        httpOnly: true,
+        expires: expiryDate, // Set the expiration date
+      })
       .status(200)
       .json(rest);
   } catch (error) {
