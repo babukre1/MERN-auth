@@ -3,11 +3,15 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
+import membersRoutes from "./routes/member.route.js";
+import adminRoutes from "./routes/admin.route.js";
+import cors from "cors"
+
 
 const app = express();
 
 dotenv.config();
-
+app.use(cors())
 mongoose
   .connect(process.env.MONGO)
   .then((res) => {
@@ -18,6 +22,8 @@ app.use(express.json());
 
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/members", membersRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode || 500;
