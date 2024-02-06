@@ -1,4 +1,3 @@
-import React from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -11,9 +10,7 @@ export default function SignUp() {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    console.log("submitted");
     setFormData({ ...formData, [e.target.id]: e.target.value });
-    console.log(formData);
   };
 
   const handleSubmit = async (e) => {
@@ -23,11 +20,12 @@ export default function SignUp() {
       setError(false);
       const response = await axios.post("/api/auth/signup", formData);
       const data = await response.data;
-      console.log(data, formData);
+      console.log(data);
       setLoading(false);
       // set error state to true if there is an error
       if (data.success == false) {
         setError(true);
+        return;
       }
       navigate('/sign-in')
 
@@ -56,7 +54,7 @@ export default function SignUp() {
           onChange={handleChange}
         />
         <input
-          type="text"
+          type="password"
           placeholder="Password"
           id="password"
           className="bg-slate-100 p-3 rounded-lg"
@@ -68,7 +66,7 @@ export default function SignUp() {
         >
           {loading ? "...loading" : "sin up"}
         </button>
-        {/* <OAuth/> */}
+        <OAuth/>
       </form>
       <div className="flex gap-2 mt-5">
         <p>have an account?</p>

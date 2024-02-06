@@ -47,7 +47,7 @@ export default function SignIn() {
           onChange={handleChange}
         />
         <input
-          type="text"
+          type="password"
           placeholder="Password"
           id="password"
           className="bg-slate-100 p-3 rounded-lg"
