@@ -4,8 +4,8 @@ import jwt from "jsonwebtoken";
 import { errorHandler } from "../utiles/error.js";
 
 export const test = () => {
-  res.send("API Working")
-}
+  res.send("API Working");
+};
 
 // signup controller.
 export const signup = async (req, res, next) => {
@@ -75,7 +75,7 @@ export const google = async (req, res, next) => {
       username:
         name.split(" ").join("").toLowerCase() +
         Math.floor(Math.random() * 10000),
-      email: email,
+      email,
       password: hashedPassword,
       profilePicture: photo,
     });
@@ -91,5 +91,34 @@ export const google = async (req, res, next) => {
       })
       .status(200)
       .json(rest);
+  }
+};
+
+export const updateUser = async (req, res, next) => {
+  let { username, email, profilePicture } = req.body;
+  if (req.user.id !== req.params.id) {
+    return next(errorHandler(401, "you can update only your account"));
+  }
+  try {
+    if (req.body.password) {
+      req.body.password = bcryptjs.hashSync(req.body.password, 10);
+    }
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      {
+        $set: {
+          username,
+          email,
+          password: req.body.password,
+          profilePicture,
+        },
+      },
+      { new: true }
+    );
+    const { password, ...rest } = updatedUser._doc;
+
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error);
   }
 };
