@@ -5,14 +5,15 @@ import userRoutes from "./routes/user.route.js";
 import authRoutes from "./routes/auth.route.js";
 import membersRoutes from "./routes/member.route.js";
 import adminRoutes from "./routes/admin.route.js";
-import cookieParser from 'cookie-parser';
-import cors from "cors"
-
+import cookieParser from "cookie-parser";
+import cors from "cors";
 
 const app = express();
-app.use(cookieParser())
+app.use(cookieParser());
 dotenv.config();
-app.use(cors())
+app.use(cors());
+app.use(cors({ origin: "/api", credentials: true }));
+
 mongoose
   .connect(process.env.MONGO)
   .then((res) => {
@@ -39,4 +40,3 @@ app.use((err, req, res, next) => {
 app.listen(3004, () => {
   console.log("server listening in port 3000");
 });
-
