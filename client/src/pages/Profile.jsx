@@ -12,6 +12,9 @@ import {
   updateUserStart,
   updateUserFailure,
   updateUserSuccess,
+  deleteUserStart,
+  deleteUserFailure,
+  deleteUserSuccess,
 } from "../redux/userSlice";
 export default function Profile() {
   const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -63,6 +66,7 @@ export default function Profile() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
+      console.log(data);
       if (data.success == false) {
         dispatch(updateUserFailure(data));
         return;
@@ -77,6 +81,22 @@ export default function Profile() {
     setFormData({ ...formData, [e.target.id]: e.target.value });
     console.log(formData);
   };
+  const handleUserDelete = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await axios.delete(`/api/user/delete/${currentUser._id}`)
+      const data = await res.data;
+      console.log(data);
+      if(data.success === false){
+        dispatch(deleteUserFailure(data));
+      }
+      dispatch(deleteUserSuccess());
+    } catch (error) {
+      dispatch(deleteUserFailure(data));
+      console.log(error);
+
+    }
+  }
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -137,7 +157,7 @@ export default function Profile() {
         </button>
       </form>
       <div className="flex justify-between mt-3">
-        <span className="text-red-500 cursor-pointer font-semibold">
+        <span onClick={handleUserDelete} className="text-red-500 cursor-pointer font-semibold">
           Delete Account
         </span>
         <span className="text-red-500 cursor-pointer font-semibold">
