@@ -13,7 +13,6 @@ const app = express();
 app.use(cookieParser());
 dotenv.config();
 app.use(cors());
-app.use();
 mongoose
   .connect(process.env.MONGO)
   .then((res) => {
