@@ -21,9 +21,9 @@ app.use(express.static(path.join(__dirname, '/client/dist')));
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
-})
+app.get("*", (req, res) => {
+  res.status(200).sendFile(path.join(__dirname, 'client', 'dist', 'index.html'));
+});
 
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode || 500;
