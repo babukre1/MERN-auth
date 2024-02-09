@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { app } from "../firebase";
 import {
   getStorage,
@@ -15,6 +16,7 @@ import {
   deleteUserStart,
   deleteUserFailure,
   deleteUserSuccess,
+  signout,
 } from "../redux/userSlice";
 export default function Profile() {
   const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -84,19 +86,26 @@ export default function Profile() {
   const handleUserDelete = async () => {
     try {
       dispatch(deleteUserStart());
-      const res = await axios.delete(`/api/user/delete/${currentUser._id}`)
+      const res = await axios.delete(`/api/user/delete/${currentUser._id}`);
       const data = await res.data;
       console.log(data);
-      if(data.success === false){
+      if (data.success === false) {
         dispatch(deleteUserFailure(data));
       }
       dispatch(deleteUserSuccess());
     } catch (error) {
       dispatch(deleteUserFailure(data));
       console.log(error);
-
     }
-  }
+  };
+  const handleSignout = async () => {
+    try {
+      await fetch("api/auth/signout");
+      dispatch(signout());
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -153,19 +162,28 @@ export default function Profile() {
          uppercase hover:opacity-90
          disabled:opacity-80 "
         >
-          {loading? "...loading" : "Update"}
+          {loading ? "...loading" : "Update"}
         </button>
       </form>
       <div className="flex justify-between mt-3">
-        <span onClick={handleUserDelete} className="text-red-500 cursor-pointer font-semibold">
+        <span
+          onClick={handleUserDelete}
+          className="text-red-500 cursor-pointer font-semibold"
+        >
           Delete Account
         </span>
-        <span className="text-red-500 cursor-pointer font-semibold">
+        <span
+          onClick={handleSignout}
+          className="text-red-500 cursor-pointer font-semibold"
+        >
           Sign Out
         </span>
       </div>
       <p className="text-red-500 mt-5"> {error && "Something went wrong!"}</p>
-      <p className="text-green-600 mt-5"> {userUpdated && "User Updated successfully!"}</p>
+      <p className="text-green-600 mt-5">
+        {" "}
+        {userUpdated && "User Updated successfully!"}
+      </p>
     </div>
   );
 }
