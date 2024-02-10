@@ -64,7 +64,7 @@ export default function SignUp() {
           className="bg-slate-700 text-white p-3
          rounded-lg uppercase hover: opacity-95 disabled:opacity-75"
         >
-          {loading ? "...loading" : "sin up"}
+          {loading ? "...loading" : "sign up"}
         </button>
         <OAuth/>
       </form>
